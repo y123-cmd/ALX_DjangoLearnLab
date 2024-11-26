@@ -1,11 +1,10 @@
-
 from relationship_app.models import Library, Librarian
 import os
 import django
 from relationship_app.models import Author, Book, Library
 
 # Setup Django environment (useful for standalone script)
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
 django.setup()
 
 
@@ -24,7 +23,7 @@ def list_books_in_library(library_name):
 
 
 # Replace 'library_name_here' with the actual name of the library you're querying.
-library_name = 'library_name_here'
+library_name = "library_name_here"
 
 try:
     # Get the specific library by its name

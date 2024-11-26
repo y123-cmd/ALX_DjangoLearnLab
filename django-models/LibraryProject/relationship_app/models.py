@@ -1,4 +1,3 @@
-
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
@@ -13,26 +12,32 @@ class Author(models.Model):
     def __str__(self):
         return self.name
 
+
 # Book model
 
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(
-        Author, related_name='books', on_delete=models.CASCADE,)
+        Author,
+        related_name="books",
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return self.title
+
 
 # Library model
 
 
 class Library(models.Model):
     name = models.CharField(max_length=100)
-    books = models.ManyToManyField(Book, related_name='libraries')
+    books = models.ManyToManyField(Book, related_name="libraries")
 
     def __str__(self):
         return self.name
+
 
 # Librarian model
 
@@ -40,7 +45,8 @@ class Library(models.Model):
 class Librarian(models.Model):
     name = models.CharField(max_length=100)
     library = models.OneToOneField(
-        Library, on_delete=models.CASCADE, related_name='librarian')
+        Library, on_delete=models.CASCADE, related_name="librarian"
+    )
 
     def __str__(self):
         return self.name
@@ -48,9 +54,9 @@ class Librarian(models.Model):
 
 class UserProfile(models.Model):
     ROLE_CHOICES = [
-        ('Admin', 'Admin'),
-        ('Librarian', 'Librarian'),
-        ('Member', 'Member'),
+        ("Admin", "Admin"),
+        ("Librarian", "Librarian"),
+        ("Member", "Member"),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -58,6 +64,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
+
 
 # Automatically create a UserProfile whenever a new User is created
 
@@ -75,8 +82,7 @@ def save_user_profile(sender, instance, **kwargs):
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
-    author = models.ForeignKey(
-        'Author', on_delete=models.CASCADE, related_name="books")
+    author = models.ForeignKey("Author", on_delete=models.CASCADE, related_name="books")
 
     class Meta:
         permissions = [

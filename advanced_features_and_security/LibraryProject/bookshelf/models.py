@@ -14,6 +14,7 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+
 # Create your models here.
 
 
@@ -27,9 +28,9 @@ class CustomUserManager(BaseUserManager):
         Create and return a regular user.
         """
         if not email:
-            raise ValueError(_('The Email field must be set'))
+            raise ValueError(_("The Email field must be set"))
         email = self.normalize_email(email)
-        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault("is_active", True)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -39,13 +40,13 @@ class CustomUserManager(BaseUserManager):
         """
         Create and return a superuser.
         """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
-        if not extra_fields.get('is_staff'):
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if not extra_fields.get('is_superuser'):
-            raise ValueError(_('Superuser must have is_superuser=True.'))
+        if not extra_fields.get("is_staff"):
+            raise ValueError(_("Superuser must have is_staff=True."))
+        if not extra_fields.get("is_superuser"):
+            raise ValueError(_("Superuser must have is_superuser=True."))
 
         return self.create_user(email, password, **extra_fields)
 
@@ -54,18 +55,21 @@ class CustomUser(AbstractUser):
     """
     Custom user model extending AbstractUser
     """
-    email = models.EmailField(_('email address'), unique=True)
-    date_of_birth = models.DateField(_('date of birth'), null=True, blank=True)
+
+    email = models.EmailField(_("email address"), unique=True)
+    date_of_birth = models.DateField(_("date of birth"), null=True, blank=True)
     profile_photo = models.ImageField(
-        upload_to='profile_photos/', null=True, blank=True)
+        upload_to="profile_photos/", null=True, blank=True
+    )
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return self.email
+
 
 # Custom permissions defined in the Post model for detailed access control
 
@@ -101,7 +105,8 @@ def setup_groups():
         group, created = Group.objects.get_or_create(name=group_name)
         for perm in perms:
             permission = Permission.objects.get(
-                codename=perm, content_type=post_content_type)
+                codename=perm, content_type=post_content_type
+            )
             group.permissions.add(permission)
 
 
