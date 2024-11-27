@@ -1,3 +1,4 @@
+#settings.py
 """
 Django settings for advanced_api_project project.
 
