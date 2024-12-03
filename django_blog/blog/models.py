@@ -1,17 +1,25 @@
 from django.db import models
-from django.contrib.auth.models import User  # Import the User model
-from django.utils.timezone import now
+from django.contrib.auth.models import User
 
 class Post(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
     content = models.TextField()
-    created_at = models.DateTimeField(default=now)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    # New fields
-    author = models.ForeignKey(User, on_delete=models.CASCADE)  # Author field, linked to the User model
-    published_date = models.DateTimeField(null=True, blank=True)  # Published date, can be null
+    published_date = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
 
+ 
+
+class Comment(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Comment by {self.author} on {self.post}'
+
+"Comment(models.Model)", "post", "created_at", "updated_at"
