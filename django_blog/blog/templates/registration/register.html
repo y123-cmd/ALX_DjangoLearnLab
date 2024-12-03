@@ -1,12 +1,17 @@
-{% extends "base_generic.html" %}
-
-{% block content %}
-  <h2>Register</h2>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-  </form>
-  <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h2>Register</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+    <a href="{% url 'login' %}">Already have an account? Login</a>
+</body>
+</html>
 
