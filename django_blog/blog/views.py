@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
-
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -15,3 +16,10 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        # Handle form data for updating user information
+        pass
+    return render(request, 'profile.html')
