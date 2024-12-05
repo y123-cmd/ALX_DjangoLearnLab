@@ -1,15 +1,12 @@
 from django import forms 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser, Post, Comment
+from taggit.forms import TagWidget
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField()
-    picture = forms.ImageField()
-    bio = forms.Textarea()
-
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('username', 'email', 'picture', 'bio')  
+        fields = ('username','password1', 'password2', 'email' , 'picture', 'bio')  
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -21,7 +18,10 @@ class CustomUserChangeForm(UserChangeForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
+        widgets = {
+            'tags': TagWidget(),
+        }
 
 class CommentForm(forms.ModelForm):
     class Meta:
