@@ -1,29 +1,45 @@
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserRegistrationSerializer, UserLoginSerializer
-from rest_framework.decorators import permission_classes
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+from rest_framework import status
+from .serializers import UserSerializer
 
-@api_view(['POST'])
-def register(request):
-    if request.method == 'POST':
-        serializer = UserRegistrationSerializer(data=request.data)
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
-            return Response({'message': 'User created successfully!'}, status=status.HTTP_201_CREATED)
+            user, token = serializer.save()
+            return Response({
+                'user': UserSerializer(user).data,
+                'token': token.key
+            })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def login_view(request):
-    if request.method == 'POST':
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(serializer.validated_data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class LoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def profile(request):
-    return Response({'username': request.user.username, 'email': request.user.email})
+        try:
+            user = User.objects.get(username=username)
+            if user.check_password(password):
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({
+                    'token': token.key
+                })
+            return Response({"detail": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            'username': user.username,
+            'email': user.email
+        })
 
