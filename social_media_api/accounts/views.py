@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from .serializers import UserSerializer
 
@@ -23,14 +23,14 @@ class LoginView(APIView):
         password = request.data.get('password')
 
         try:
-            user = User.objects.get(username=username)
+            user = get_user_model().objects.get(username=username)
             if user.check_password(password):
                 token, created = Token.objects.get_or_create(user=user)
                 return Response({
                     'token': token.key
                 })
             return Response({"detail": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-        except User.DoesNotExist:
+        except get_user_model().DoesNotExist:
             return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class ProfileView(APIView):
