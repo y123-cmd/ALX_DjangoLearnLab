@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserRegistrationSerializer, UserLoginSerializer
+from rest_framework.decorators import permission_classes
 
 @api_view(['POST'])
 def register(request):

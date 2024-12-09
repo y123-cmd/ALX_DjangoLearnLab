@@ -24,6 +24,7 @@ class UserLoginSerializer(serializers.Serializer):
         # Validate user credentials
         user = get_user_model().objects.filter(username=data['username']).first()
         if user and user.check_password(data['password']):
+            # Create a token for the user after successful login
             token, created = Token.objects.get_or_create(user=user)
             return {'token': token.key}
         raise serializers.ValidationError("Invalid credentials")
