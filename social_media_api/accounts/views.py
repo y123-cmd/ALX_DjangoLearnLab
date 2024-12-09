@@ -40,6 +40,8 @@ class ProfileView(APIView):
         user = request.user
         return Response({
             'username': user.username,
-            'email': user.email
+            'email': user.email,
+            'bio': user.bio,
+            'profile_picture': user.profile_picture.url if user.profile_picture else None
         })
 
